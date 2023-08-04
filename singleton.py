@@ -1,27 +1,17 @@
-class Singleton(type):
-    _instances = {}
+class Settings:
+    _instance = None
 
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super().__call__(*args, **kwargs)
-        return cls._instances[cls]
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Settings, cls).__new__(cls)
+            # put any initialization here
+            cls._instance.mode = 'dark'
+        return cls._instance
 
-class CurrencyConverter(metaclass=Singleton):
-    rates = {'USD': {'EGP': 40}, 'EGP': {'USD': 0.025}}
+# Trying to get instance of Settings
+settings = Settings()  # Does not throw error, returns the singleton instance
 
-    def convert(self, amount, from_currency, to_currency):
-        if from_currency == to_currency:
-            return amount
-        else:
-            return amount * self.rates[from_currency][to_currency]
+another_settings = Settings()  # This also returns the same instance
 
-if __name__ == "__main__":
-    converter = CurrencyConverter()
-
-    amount_in_usd = 200
-    amount_in_egp = converter.convert(amount_in_usd, 'USD', 'EGP')
-    print(f"{amount_in_usd} USD is equivalent to {amount_in_egp} EGP.")
-
-    amount_in_egp = 1000
-    amount_in_usd = converter.convert(amount_in_egp, 'EGP', 'USD')
-    print(f"{amount_in_egp} EGP is equivalent to {amount_in_usd} USD.")
+# Proving that both variables are pointing to the same instance
+print(settings is another_settings)  # prints: True
