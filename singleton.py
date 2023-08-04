@@ -15,3 +15,7 @@ another_settings = Settings()  # This also returns the same instance
 
 # Proving that both variables are pointing to the same instance
 print(settings is another_settings)  # prints: True
+
+
+print(settings._instance.mode)
+print(another_settings._instance.mode)
